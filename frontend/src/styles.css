@@ -1,0 +1,137 @@
+/* =========================================================================
+   Invoice Studio — minimal global CSS.
+   Indigo-blue accent on warm neutral surfaces. The bulk of styling comes
+   from MUI's theme + sx props + Framer Motion. This file only keeps things
+   that need raw CSS: animated halo backdrop, brand mark, donut wrap, page
+   helpers, reusable keyframes.
+   ========================================================================= */
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  font-feature-settings: "cv11", "ss03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* Soft indigo / cyan halo — gives the canvas a faint glow that ties the
+   primary accent into otherwise-neutral surfaces. Replaces the old warm
+   "paper" gradient. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background:
+    radial-gradient(45% 40% at 80% 0%, rgba(37, 99, 235, 0.10), transparent 60%),
+    radial-gradient(40% 35% at 0% 100%, rgba(6, 182, 212, 0.08), transparent 60%),
+    radial-gradient(35% 35% at 50% 50%, rgba(59, 130, 246, 0.05), transparent 60%);
+  z-index: -1;
+  animation: bgFloat 24s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes bgFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(2%, -1%) scale(1.04); }
+  66%      { transform: translate(-2%, 2%) scale(0.97); }
+}
+
+::selection { background: rgba(37, 99, 235, 0.25); }
+
+/* Brand mark — a solid indigo square with an inset window cutout and a small
+   coloured dot. The accent picks up the theme's primary colour via CSS vars
+   exposed by MUI. */
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px -8px rgba(37, 99, 235, 0.55);
+  transition: transform 0.3s cubic-bezier(0.2, 0.85, 0.3, 1.4), box-shadow 0.3s ease;
+}
+.brand-mark:hover {
+  transform: rotate(8deg) scale(1.06);
+  box-shadow: 0 10px 24px -8px rgba(37, 99, 235, 0.7);
+}
+.brand-mark::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border-radius: 5px;
+  background: var(--mui-palette-background-default, #f8fafc);
+}
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+}
+.brand-mark.large {
+  width: 56px;
+  height: 56px;
+  animation: pulseGlow 1.8s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.55); transform: scale(1); }
+  50%      { box-shadow: 0 14px 36px -6px rgba(6, 182, 212, 0.7);  transform: scale(1.06); }
+}
+
+/* Splash (loading state from AuthContext) */
+.splash {
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+/* Page content wrapper used by every page */
+.page-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Donut chart wrapper (StatusDonut renders an inline SVG inside) */
+.donut-wrap {
+  flex-shrink: 0;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+/* Reusable animation utilities (CSS-only fallback for places that don't
+   warrant a Framer Motion component). */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes typing {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%           { opacity: 1;   transform: translateY(-3px); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-rise { animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.3, 1.05) both; }
+.animate-fade { animation: fade 0.35s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

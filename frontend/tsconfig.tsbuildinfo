@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/types.ts","./src/components/chat.tsx","./src/components/invoicedetail.tsx","./src/components/invoicelist.tsx","./src/components/upload.tsx","./src/hooks/useinvoicestream.ts"],"version":"5.9.3"}
